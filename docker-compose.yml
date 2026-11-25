@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pos_clothing_saas_web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://pos_user:pos_secure_password_2026@postgres:5432/pos_retail_saas?schema=public
+      - JWT_SECRET=voguethreads_pos_saas_ultra_secure_jwt_secret_2026_!@#$
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: pos_clothing_saas_db
+    environment:
+      POSTGRES_USER: pos_user
+      POSTGRES_PASSWORD: pos_secure_password_2026
+      POSTGRES_DB: pos_retail_saas
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
